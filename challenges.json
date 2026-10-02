@@ -1,0 +1,212 @@
+[
+  {
+    "id": "loop-off-by-one",
+    "title": "Sum Up To N",
+    "category": "loops",
+    "difficulty": 1,
+    "language": "javascript",
+    "prompt": "solve(n) should return the sum of all integers from 1 to n (inclusive). It's returning the wrong total.",
+    "brokenCode": "function solve(n) {\n  let total = 0;\n  for (let i = 1; i < n; i++) {\n    total += i;\n  }\n  return total;\n}",
+    "solutionSignature": "solve",
+    "tests": [
+      { "args": [1], "expected": 1 },
+      { "args": [5], "expected": 15 },
+      { "args": [10], "expected": 55 },
+      { "args": [0], "expected": 0 }
+    ],
+    "hint": "Check the loop's stopping condition against what 'inclusive' means.",
+    "explanationKeywords": ["off-by-one", "condition", "<", "<=", "loop", "inclusive", "boundary"]
+  },
+  {
+    "id": "operator-equality",
+    "title": "Find The Match",
+    "category": "operators",
+    "difficulty": 1,
+    "language": "javascript",
+    "prompt": "solve(items, target) returns the first item strictly equal to target, or null if none match. It's matching things it shouldn't.",
+    "brokenCode": "function solve(items, target) {\n  for (const item of items) {\n    if (item = target) {\n      return item;\n    }\n  }\n  return null;\n}",
+    "solutionSignature": "solve",
+    "tests": [
+      { "args": [[1, 2, 3], 2], "expected": 2 },
+      { "args": [[0, false, ""], 5], "expected": null },
+      { "args": [["a", "b"], "b"], "expected": "b" },
+      { "args": [[], 1], "expected": null }
+    ],
+    "hint": "Assignment and comparison look similar but do very different things in JavaScript.",
+    "explanationKeywords": ["=", "==", "===", "assignment", "comparison", "equality"]
+  },
+  {
+    "id": "scope-var-loop",
+    "title": "Delayed Greetings",
+    "category": "scope",
+    "difficulty": 2,
+    "language": "javascript",
+    "prompt": "solve(names) returns an array of index-to-name pairs like '0: Ann', built by scheduling each line with a callback (simulated here with a synchronous queue, not setTimeout, so it stays testable). Every line currently shows the same, wrong index.",
+    "brokenCode": "function solve(names) {\n  const results = [];\n  const queue = [];\n  for (var i = 0; i < names.length; i++) {\n    queue.push(function () {\n      results.push(i + ': ' + names[i]);\n    });\n  }\n  queue.forEach(function (fn) { fn(); });\n  return results;\n}",
+    "solutionSignature": "solve",
+    "tests": [
+      { "args": [["Ann", "Bo", "Cy"]], "expected": ["0: Ann", "1: Bo", "2: Cy"] },
+      { "args": [["Sol"]], "expected": ["0: Sol"] },
+      { "args": [[]], "expected": [] }
+    ],
+    "hint": "var is function-scoped, not block-scoped -- every closure captured the same variable.",
+    "explanationKeywords": ["var", "let", "scope", "closure", "block", "shared"]
+  },
+  {
+    "id": "async-missing-await",
+    "title": "Fetch Then Use",
+    "category": "async",
+    "difficulty": 2,
+    "language": "javascript",
+    "prompt": "solve(id) should look up a user (simulated async lookup) and return their formatted name. It currently returns garbage because it uses the result before it's ready.",
+    "brokenCode": "async function lookupUser(id) {\n  return new Promise((resolve) => {\n    resolve({ id, name: id === 1 ? 'Ada Lovelace' : 'Grace Hopper' });\n  });\n}\n\nasync function solve(id) {\n  const userPromise = lookupUser(id);\n  return 'User: ' + userPromise.name;\n}",
+    "solutionSignature": "solve",
+    "async": true,
+    "tests": [
+      { "args": [1], "expected": "User: Ada Lovelace" },
+      { "args": [2], "expected": "User: Grace Hopper" }
+    ],
+    "hint": "userPromise is a Promise object, not the resolved value -- what keyword unwraps it?",
+    "explanationKeywords": ["await", "promise", "async", "unresolved", "race"]
+  },
+  {
+    "id": "array-mutate-while-iterating",
+    "title": "Remove Evens",
+    "category": "arrays",
+    "difficulty": 2,
+    "language": "javascript",
+    "prompt": "solve(nums) should return the array with all even numbers removed (mutating in place is fine, return the same array). It skips some evens when there are two in a row.",
+    "brokenCode": "function solve(nums) {\n  for (let i = 0; i < nums.length; i++) {\n    if (nums[i] % 2 === 0) {\n      nums.splice(i, 1);\n    }\n  }\n  return nums;\n}",
+    "solutionSignature": "solve",
+    "tests": [
+      { "args": [[1, 2, 3, 4, 5]], "expected": [1, 3, 5] },
+      { "args": [[2, 4, 6, 8]], "expected": [] },
+      { "args": [[2, 2, 3]], "expected": [3] },
+      { "args": [[1, 3, 5]], "expected": [1, 3, 5] }
+    ],
+    "hint": "splice shifts every later element down by one -- what happens to i on the next iteration?",
+    "explanationKeywords": ["splice", "index", "shift", "decrement", "i--", "mutate"]
+  },
+  {
+    "id": "recursion-missing-base-case",
+    "title": "Factorial",
+    "category": "recursion",
+    "difficulty": 1,
+    "language": "javascript",
+    "prompt": "solve(n) should return n! (factorial). Right now it blows the call stack.",
+    "brokenCode": "function solve(n) {\n  return n * solve(n - 1);\n}",
+    "solutionSignature": "solve",
+    "tests": [
+      { "args": [0], "expected": 1 },
+      { "args": [1], "expected": 1 },
+      { "args": [5], "expected": 120 },
+      { "args": [6], "expected": 720 }
+    ],
+    "hint": "Every recursive function needs a condition where it stops calling itself.",
+    "explanationKeywords": ["base case", "stop", "recursion", "stack overflow", "terminate"]
+  },
+  {
+    "id": "recursion-fib-index",
+    "title": "Fibonacci",
+    "category": "recursion",
+    "difficulty": 3,
+    "language": "javascript",
+    "prompt": "solve(n) returns the nth Fibonacci number (0-indexed: 0, 1, 1, 2, 3, 5, 8...). It's off by one term.",
+    "brokenCode": "function solve(n) {\n  if (n <= 1) return n;\n  return solve(n) + solve(n - 2);\n}",
+    "solutionSignature": "solve",
+    "tests": [
+      { "args": [0], "expected": 0 },
+      { "args": [1], "expected": 1 },
+      { "args": [6], "expected": 8 },
+      { "args": [10], "expected": 55 }
+    ],
+    "hint": "Compare the recursive calls to the definition: each term needs the two before it.",
+    "explanationKeywords": ["n - 1", "recursive call", "base case", "index"]
+  },
+  {
+    "id": "string-comparison",
+    "title": "Is It A Palindrome",
+    "category": "strings",
+    "difficulty": 1,
+    "language": "javascript",
+    "prompt": "solve(str) returns true if str reads the same forwards and backwards, ignoring case. Mixed-case palindromes are failing.",
+    "brokenCode": "function solve(str) {\n  const reversed = str.split('').reverse().join('');\n  return str === reversed;\n}",
+    "solutionSignature": "solve",
+    "tests": [
+      { "args": ["racecar"], "expected": true },
+      { "args": ["Racecar"], "expected": true },
+      { "args": ["hello"], "expected": false },
+      { "args": ["NotApalindrome"], "expected": false }
+    ],
+    "hint": "Case-sensitivity is silently breaking the comparison for anything but all-lowercase input.",
+    "explanationKeywords": ["case", "lowercase", "toLowerCase", "sensitive"]
+  },
+  {
+    "id": "function-missing-return",
+    "title": "Double Every Item",
+    "category": "functions",
+    "difficulty": 1,
+    "language": "javascript",
+    "prompt": "solve(nums) should return a new array with every number doubled. It's returning an array of undefined.",
+    "brokenCode": "function solve(nums) {\n  return nums.map(function (n) {\n    n * 2;\n  });\n}",
+    "solutionSignature": "solve",
+    "tests": [
+      { "args": [[1, 2, 3]], "expected": [2, 4, 6] },
+      { "args": [[]], "expected": [] },
+      { "args": [[-1, 0, 5]], "expected": [-2, 0, 10] }
+    ],
+    "hint": "A callback that computes a value still needs to hand that value back.",
+    "explanationKeywords": ["return", "missing", "undefined", "callback"]
+  },
+  {
+    "id": "array-index-bounds",
+    "title": "Last Element",
+    "category": "arrays",
+    "difficulty": 1,
+    "language": "javascript",
+    "prompt": "solve(arr) should return the last element of the array. It's grabbing undefined instead.",
+    "brokenCode": "function solve(arr) {\n  return arr[arr.length];\n}",
+    "solutionSignature": "solve",
+    "tests": [
+      { "args": [[1, 2, 3]], "expected": 3 },
+      { "args": [["x"]], "expected": "x" },
+      { "args": [[5, 6, 7, 8]], "expected": 8 }
+    ],
+    "hint": "Arrays are zero-indexed -- what's the highest valid index for a given length?",
+    "explanationKeywords": ["length - 1", "zero-indexed", "index", "bounds"]
+  },
+  {
+    "id": "async-race-condition",
+    "title": "Fetch In Order",
+    "category": "async",
+    "difficulty": 3,
+    "language": "javascript",
+    "prompt": "solve(ids) should fetch each id (simulated, out-of-order latency) and return names in the SAME order as ids, not in whichever order they resolve.",
+    "brokenCode": "function fetchName(id) {\n  const delay = id % 2 === 0 ? 5 : 30;\n  const names = { 1: 'Ada', 2: 'Grace', 3: 'Alan' };\n  return new Promise((resolve) => setTimeout(() => resolve(names[id]), delay));\n}\n\nasync function solve(ids) {\n  const results = [];\n  ids.forEach(async (id) => {\n    const name = await fetchName(id);\n    results.push(name);\n  });\n  return results;\n}",
+    "solutionSignature": "solve",
+    "async": true,
+    "tests": [
+      { "args": [[1, 2, 3]], "expected": ["Ada", "Grace", "Alan"] },
+      { "args": [[3, 1]], "expected": ["Alan", "Ada"] }
+    ],
+    "hint": "forEach doesn't wait for its async callbacks, and doesn't preserve arrival order either -- what tool runs promises in parallel but keeps their order?",
+    "explanationKeywords": ["Promise.all", "forEach", "order", "await", "parallel", "map"]
+  },
+  {
+    "id": "loop-infinite-guard",
+    "title": "Countdown",
+    "category": "loops",
+    "difficulty": 2,
+    "language": "javascript",
+    "prompt": "solve(n) should return an array counting down from n to 1, e.g. solve(3) -> [3,2,1]. As written it never terminates.",
+    "brokenCode": "function solve(n) {\n  const out = [];\n  let i = n;\n  while (i > 0) {\n    out.push(i);\n    i++;\n  }\n  return out;\n}",
+    "solutionSignature": "solve",
+    "tests": [
+      { "args": [3], "expected": [3, 2, 1] },
+      { "args": [1], "expected": [1] },
+      { "args": [5], "expected": [5, 4, 3, 2, 1] }
+    ],
+    "hint": "The loop variable needs to move toward the stopping condition, not away from it.",
+    "explanationKeywords": ["increment", "decrement", "i--", "i++", "infinite"]
+  }
+]

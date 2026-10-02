@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Sprout — debug your way to fluent code</title>
+<meta name="description" content="Sprout: a spaced-repetition debugging trainer for people learning to code." />
+<meta name="theme-color" content="#0d1117" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ======================= APP SHELL ======================= -->
+<div id="app">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path d="M12 2 L12 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="12" cy="14" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+        <circle cx="12" cy="14" r="1.6" fill="currentColor"/>
+      </svg>
+      <span class="brand-name">Sprout</span>
+      <span class="brand-tag">debug trainer</span>
+    </div>
+
+    <nav class="view-switch" role="tablist" aria-label="View">
+      <button class="view-btn is-active" data-view="practice" role="tab" aria-selected="true">Practice</button>
+      <button class="view-btn" data-view="analytics" role="tab" aria-selected="false">Analytics</button>
+    </nav>
+
+    <div class="topbar-status">
+      <span class="status-dot" id="netDot" title="Online/offline status"></span>
+      <span id="netLabel">online</span>
+      <span class="due-pill" id="duePill">0 due</span>
+    </div>
+  </header>
+
+  <!-- ======================= PRACTICE VIEW ======================= -->
+  <main class="view" id="view-practice">
+
+    <!-- Sidebar: queue of challenges scheduled by SM-2 -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head">
+        <h2>Queue</h2>
+        <span class="sidebar-sub">sorted by what's due</span>
+      </div>
+      <ul class="challenge-list" id="challengeList" role="listbox" aria-label="Challenges"></ul>
+    </aside>
+
+    <!-- Editor + run area -->
+    <section class="workbench">
+
+      <div class="challenge-header" id="challengeHeader">
+        <div class="challenge-title-row">
+          <h1 id="challengeTitle">Loading…</h1>
+          <span class="badge badge-category" id="challengeCategory">—</span>
+          <span class="badge badge-difficulty" id="challengeDifficulty">—</span>
+        </div>
+        <p id="challengePrompt" class="challenge-prompt"></p>
+      </div>
+
+      <div class="editor-frame">
+        <div class="editor-toolbar">
+          <span class="editor-filename" id="editorFilename">solution.js</span>
+          <div class="editor-actions">
+            <button class="btn btn-ghost" id="btnHint" type="button">Hint</button>
+            <button class="btn btn-ghost" id="btnReset" type="button">Reset</button>
+            <button class="btn btn-primary" id="btnRun" type="button">Run tests <kbd>⌘⏎</kbd></button>
+          </div>
+        </div>
+
+        <!-- Hand-rolled editor: line-number gutter + contentEditable code surface -->
+        <div class="editor-body">
+          <div class="gutter" id="gutter" aria-hidden="true"></div>
+          <div class="code-surface-wrap">
+            <pre class="code-surface" id="codeSurface" contenteditable="true" spellcheck="false" autocapitalize="off" autocorrect="off"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Console / test results -->
+      <div class="console-panel" id="consolePanel">
+        <div class="console-tabs">
+          <span class="console-tab is-active">Test results</span>
+          <span class="console-hint" id="consoleHint">Run your code to see results here.</span>
+        </div>
+        <div class="console-body" id="consoleBody"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================= ANALYTICS VIEW ======================= -->
+  <main class="view" id="view-analytics" hidden>
+    <section class="analytics-wrap">
+      <h1>Skill radar</h1>
+      <p class="analytics-sub">Strength per category, built from your review history. Wider = stronger.</p>
+      <div class="radar-card">
+        <canvas id="radarCanvas" width="560" height="560" role="img" aria-label="Skill radar chart"></canvas>
+      </div>
+      <div class="stats-grid" id="statsGrid"></div>
+    </section>
+  </main>
+
+</div>
+
+<!-- ======================= EXPLAIN-YOUR-FIX MODAL ======================= -->
+<div class="modal-backdrop" id="explainBackdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="explainTitle">
+    <h2 id="explainTitle">Before we check it…</h2>
+    <p class="modal-copy">In one line: what was actually wrong with the original code? Writing it out locks in the concept — pattern-matching a fix without naming the bug doesn't stick.</p>
+    <textarea id="explainInput" rows="3" placeholder="e.g. the loop used &lt; instead of &lt;= so it stopped one short of n"></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="explainCancel" type="button">Back to editor</button>
+      <button class="btn btn-primary" id="explainSubmit" type="button" disabled>Check my fix</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= RESULT TOAST ======================= -->
+<div class="toast" id="toast" hidden></div>
+
+<!-- Sandboxed execution target. sandbox="allow-scripts" grants JS execution but
+     denies same-origin, forms, popups, top-navigation — the iframe cannot touch
+     the parent DOM, cookies, or storage. Communication happens only via postMessage. -->
+<iframe id="sandboxFrame" class="sandbox-frame" sandbox="allow-scripts" title="code sandbox" aria-hidden="true"></iframe>
+
+<script src="script.js"></script>
+</body>
+</html>
